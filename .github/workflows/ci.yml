@@ -93,6 +93,8 @@ jobs:
             - '.github/workflows/ci.yml'
 
     - name: Check if CI should run for this platform
+      id: platform-check
+      shell: sh
       if: |
         (steps.filter.outputs.cross-platform == 'true')
         || (((steps.filter.outputs.windows   == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'pc-windows'   )
@@ -101,45 +103,51 @@ jobs:
         || (((steps.filter.outputs.android   == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'linux-android')
         || ((steps.filter.outputs.ios        == 'true')                                                 && contains(matrix.platform.target, 'apple-ios'    )
         || ((steps.filter.outputs.wasm       == 'true')                                                 && contains(matrix.platform.target, 'wasm32'       )
+      run: echo "Proceeding"
 
     # Used to cache cargo-web
     - name: Cache cargo folder
+      if: (steps.platform-check.outcome == 'success')
       uses: actions/cache@v1
       with:
         path: ~/.cargo
         key: ${{ matrix.platform.target }}-cargo-${{ matrix.rust_version }}
 
     - uses: hecrj/setup-rust-action@v1
+      if: (steps.platform-check.outcome == 'success')
       with:
         rust-version: ${{ matrix.rust_version }}${{ matrix.platform.host }}
         targets: ${{ matrix.platform.target }}
 
     - name: Install GCC Multilib
-      if: (matrix.platform.os == 'ubuntu-latest') && contains(matrix.platform.target, 'i686')
+      if: (steps.platform-check.outcome == 'success') && (matrix.platform.os == 'ubuntu-latest') && contains(matrix.platform.target, 'i686')
       run: sudo apt-get update && sudo apt-get install gcc-multilib
     - name: Install cargo-apk
-      if: contains(matrix.platform.target, 'android')
+      if: (steps.platform-check.outcome == 'success') && contains(matrix.platform.target, 'android')
       run: cargo install cargo-apk
     - name: Install cargo-web
       continue-on-error: true
-      if: contains(matrix.platform.target, 'wasm32')
+      if: (steps.platform-check.outcome == 'success') && contains(matrix.platform.target, 'wasm32')
       run: cargo install cargo-web
 
     - name: Check documentation
       shell: bash
-      if: matrix.platform.target != 'wasm32-unknown-unknown'
+      if: (steps.platform-check.outcome == 'success') && matrix.platform.target != 'wasm32-unknown-unknown'
       run: cargo $CMD doc --no-deps --target ${{ matrix.platform.target }} $OPTIONS --features $FEATURES
 
     - name: Build
       shell: bash
+      if: (steps.platform-check.outcome == 'success')
       run: cargo $CMD build --verbose --target ${{ matrix.platform.target }} $OPTIONS --features $FEATURES
 
     - name: Build tests
       shell: bash
+      if: (steps.platform-check.outcome == 'success')
       run: cargo $CMD test --no-run --verbose --target ${{ matrix.platform.target }} $OPTIONS --features $FEATURES
     - name: Run tests
       shell: bash
       if: (
+        (steps.platform-check.outcome == 'success') &&
         !contains(matrix.platform.target, 'android') &&
         !contains(matrix.platform.target, 'ios') &&
         !contains(matrix.platform.target, 'wasm32'))
@@ -148,14 +156,17 @@ jobs:
 
     - name: Build with serde enabled
       shell: bash
+      if: (steps.platform-check.outcome == 'success')
       run: cargo $CMD build --verbose --target ${{ matrix.platform.target }} $OPTIONS --features serde,$FEATURES
 
     - name: Build tests with serde enabled
       shell: bash
+      if: (steps.platform-check.outcome == 'success')
       run: cargo $CMD test --no-run --verbose --target ${{ matrix.platform.target }} $OPTIONS --features serde,$FEATURES
     - name: Run tests with serde enabled
       shell: bash
       if: (
+        (steps.platform-check.outcome == 'success') &&
         !contains(matrix.platform.target, 'android') &&
         !contains(matrix.platform.target, 'ios') &&
         !contains(matrix.platform.target, 'wasm32'))
