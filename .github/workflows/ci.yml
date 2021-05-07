@@ -50,6 +50,49 @@ jobs:
     runs-on: ${{ matrix.platform.os }}
     steps:
     - uses: actions/checkout@v2
+    - uses: tony84727/changed-file-filter@0.1.0
+      id: filter
+      with:
+        filters: |
+          windows:
+            - 'src/platform/windows.rs'
+            - 'src/platform_impl/windows/**'
+          linux:
+            - 'src/platform/unix.rs'
+            - 'src/platform_impl/linux/**'
+          macos:
+            - 'src/platform/macos.rs'
+            - 'src/platform_impl/macos/**'
+          android:
+            - 'src/platform/android.rs'
+            - 'src/platform_impl/android/**'
+          ios:
+            - 'src/platform/ios.rs'
+            - 'src/platform_impl/ios/**'
+          wasm:
+            - 'src/platform/web.rs'
+            - 'src/platform_impl/web/**'
+          run_return:
+            - 'src/platform/run_return.rs'
+          cross-platform:
+            - 'src/platform/mod.rs'
+            - 'src/platform_impl/mod.rs'
+            - 'src/*.rs'
+            - 'examples/*.rs'
+            - 'tests/*.rs'
+            - '*.toml'
+            - '.github/workflows/ci.yml'
+
+    - name: Check if CI should run for this platform
+      if: |
+        (steps.filter.outputs.cross-platform == 'true')
+        || (((steps.filter.outputs.windows   == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'pc-windows'   )
+        || (((steps.filter.outputs.linux     == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'unknown-linux')
+        || (((steps.filter.outputs.macos     == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'apple-darwin' )
+        || (((steps.filter.outputs.android   == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'linux-android')
+        || ((steps.filter.outputs.ios        == 'true')                                                 && contains(matrix.platform.target, 'apple-ios'    )
+        || ((steps.filter.outputs.wasm       == 'true')                                                 && contains(matrix.platform.target, 'wasm32'       )
+
     # Used to cache cargo-web
     - name: Cache cargo folder
       uses: actions/cache@v1
