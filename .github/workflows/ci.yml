@@ -98,12 +98,12 @@ jobs:
       if: |
         (
            (steps.filter.outputs.cross-platform == 'true')
-        || (((steps.filter.outputs.windows   == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'pc-windows'   )
-        || (((steps.filter.outputs.linux     == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'unknown-linux')
-        || (((steps.filter.outputs.macos     == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'apple-darwin' )
-        || (((steps.filter.outputs.android   == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'linux-android')
-        || ((steps.filter.outputs.ios        == 'true')                                                 && contains(matrix.platform.target, 'apple-ios'    )
-        || ((steps.filter.outputs.wasm       == 'true')                                                 && contains(matrix.platform.target, 'wasm32'       )
+        || (((steps.filter.outputs.windows   == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'pc-windows'   ))
+        || (((steps.filter.outputs.linux     == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'unknown-linux'))
+        || (((steps.filter.outputs.macos     == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'apple-darwin' ))
+        || (((steps.filter.outputs.android   == 'true') || (steps.filter.outputs.run_return == 'true')) && contains(matrix.platform.target, 'linux-android'))
+        || ((steps.filter.outputs.ios        == 'true')                                                 && contains(matrix.platform.target, 'apple-ios'    ))
+        || ((steps.filter.outputs.wasm       == 'true')                                                 && contains(matrix.platform.target, 'wasm32'       ))
         )
       run: echo "Proceeding"
 
