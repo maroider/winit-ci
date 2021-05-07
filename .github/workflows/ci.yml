@@ -78,6 +78,7 @@ jobs:
             - 'src/platform/mod.rs'
             - 'src/platform_impl/mod.rs'
             - 'src/*.rs'
+            - 'build.rs'
             - 'examples/*.rs'
             - 'tests/*.rs'
             - '*.toml'
