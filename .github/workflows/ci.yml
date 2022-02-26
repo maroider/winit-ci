@@ -100,6 +100,8 @@ jobs:
               || (needs.Tests.outputs.wasm    && input.wasm))
             )) }}
     runs-on: ubuntu-latest
+    steps:
+     - name: Dummy
 
   Run_Platform_Tests:
     needs: [Run_Tests]
