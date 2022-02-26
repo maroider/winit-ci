@@ -66,11 +66,11 @@ jobs:
     needs: [Tests]
     uses: ./.github/workflows/ci_per_platform.yml
     with:
-      cross-platform: ${{ job.filter.outputs.cross-platform }}
-      windows:        ${{ job.filter.outputs.windows }}
-      linux:          ${{ job.filter.outputs.linux   }}
-      macos:          ${{ job.filter.outputs.macos   }}
-      android:        ${{ job.filter.outputs.android }}
-      ios:            ${{ job.filter.outputs.ios     }}
-      wasm:           ${{ job.filter.outputs.wasm    }}
+      cross-platform: ${{ steps.filter.outputs.cross-platform }}
+      windows:        ${{ steps.filter.outputs.windows }}
+      linux:          ${{ steps.filter.outputs.linux   }}
+      macos:          ${{ steps.filter.outputs.macos   }}
+      android:        ${{ steps.filter.outputs.android }}
+      ios:            ${{ steps.filter.outputs.ios     }}
+      wasm:           ${{ steps.filter.outputs.wasm    }}
 
