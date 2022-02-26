@@ -22,37 +22,37 @@ jobs:
       RUST_BACKTRACE: 1
       CARGO_INCREMENTAL: 0
       RUSTFLAGS: "-C debuginfo=0 --deny warnings"
-      OPTIONS: ${{ matrix.platform.options }}
-      FEATURES: ${{ format(',{0}', matrix.platform.features ) }}
-      CMD: ${{ matrix.platform.cmd }}
+      OPTIONS: ${{ inputs.options }}
+      FEATURES: ${{ format(',{0}', inputs.features ) }}
+      CMD: ${{ inputs.cmd }}
 
     if: ${{ needs.Run_Tests.run }}
 
-    runs-on: ${{ matrix.platform.os }}
+    runs-on: ${{ inputs.os }}
     steps:
     # Used to cache cargo-web
     - name: Cache cargo folder
       uses: actions/cache@v1
       with:
         path: ~/.cargo
-        key: ${{ matrix.platform.target }}-cargo-${{ matrix.rust_version }}
+        key: ${{ inputs.target }}-cargo-${{ matrix.rust_version }}
 
     - uses: hecrj/setup-rust-action@v1
       with:
-        rust-version: ${{ matrix.rust_version }}${{ matrix.platform.host }}
-        targets: ${{ matrix.platform.target }}
+        rust-version: ${{ matrix.rust_version }}${{ inputs.host }}
+        targets: ${{ inputs.target }}
 
     - name: Install GCC Multilib
-      if: (matrix.platform.os == 'ubuntu-latest') && contains(matrix.platform.target, 'i686')
+      if: (inputs.os == 'ubuntu-latest') && contains(inputs.target, 'i686')
       run: sudo apt-get update && sudo apt-get install gcc-multilib
     - name: Install cargo-apk
-      if: contains(matrix.platform.target, 'android')
+      if: contains(inputs.target, 'android')
       run: cargo install cargo-apk
 
     - name: Check documentation
       shell: bash
-      if: matrix.platform.target != 'wasm32-unknown-unknown'
-      run: cargo $CMD doc --no-deps --target ${{ matrix.platform.target }} $OPTIONS --features $FEATURES
+      if: inputs.target != 'wasm32-unknown-unknown'
+      run: cargo $CMD doc --no-deps --target ${{ inputs.target }} $OPTIONS --features $FEATURES
 
     - name: Build
       shell: bash
