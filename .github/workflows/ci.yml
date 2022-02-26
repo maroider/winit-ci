@@ -70,7 +70,7 @@ jobs:
             - 'src/platform_impl/web/**'
 
     - name: Run tests
-      uses: ./ci_per_platform.yml
+      uses: ./.github/workflows/ci_per_platform.yml
       with:
         windows: ${{ job.filter.outputs.windows }}
         linux:   ${{ job.filter.outputs.linux   }}
