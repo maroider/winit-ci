@@ -6,7 +6,8 @@ on:
     branches: [master]
 
 jobs:
-  Check_Formatting:
+  check_formatting:
+    name: Check formatting
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -17,7 +18,8 @@ jobs:
     - name: Check Formatting
       run: cargo +stable fmt --all -- --check
 
-  Tests:  
+  filter:
+    name: Filter
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -60,15 +62,16 @@ jobs:
             - 'src/platform_impl/web/**'
     outputs:
       cross-platform: ${{ steps.filter.cross-platform }}
-      windows:        ${{ steps.filter.windows || steps.filter.run_return }}
-      linux:          ${{ steps.filter.linux   || steps.filter.run_return }}
-      android:        ${{ steps.filter.android || steps.filter.run_return }}
-      macos:          ${{ steps.filter.macos   || steps.filter.run_return }}
-      ios:            ${{ steps.filter.ios            }}
-      wasm:           ${{ steps.filter.wasm           }}
+      windows: ${{ steps.filter.windows || steps.filter.run_return }}
+      linux:   ${{ steps.filter.linux   || steps.filter.run_return }}
+      android: ${{ steps.filter.android || steps.filter.run_return }}
+      macos:   ${{ steps.filter.macos   || steps.filter.run_return }}
+      ios:  ${{ steps.filter.ios  }}
+      wasm: ${{ steps.filter.wasm }}
 
-  Run_Tests:
-    needs: [Tests]
+  run_tests:
+    name: Run tests
+    needs: [filter]
     strategy:
       matrix:
         rust_version: [stable, nightly]
