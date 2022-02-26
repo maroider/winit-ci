@@ -94,15 +94,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Run platform tests
-      if: ${{ (needs.Tests.outputs.cross-platform
-                || ( (needs.Tests.outputs.windows && contains(matrix.platform.target, 'windows'))
-                  || (needs.Tests.outputs.linux   && contains(matrix.platform.target, 'linux-gnu'))
-                  || (needs.Tests.outputs.android && contains(matrix.platform.target, 'android'))
-                  || (needs.Tests.outputs.macos   && contains(matrix.platform.target, 'apple-darwin'))
-                  || (needs.Tests.outputs.ios     && contains(matrix.platform.target, 'apple-ios'))
-                  || (needs.Tests.outputs.wasm    && contains(matrix.platform.target, 'wasm32'))
-                )
-           ) }}
+#      if: ${{ (needs.Tests.outputs.cross-platform
+#                || ( (needs.Tests.outputs.windows && contains(matrix.platform.target, 'windows'))
+#                  || (needs.Tests.outputs.linux   && contains(matrix.platform.target, 'linux-gnu'))
+#                  || (needs.Tests.outputs.android && contains(matrix.platform.target, 'android'))
+#                  || (needs.Tests.outputs.macos   && contains(matrix.platform.target, 'apple-darwin'))
+#                  || (needs.Tests.outputs.ios     && contains(matrix.platform.target, 'apple-ios'))
+#                  || (needs.Tests.outputs.wasm    && contains(matrix.platform.target, 'wasm32'))
+#                )
+#           ) }}
       uses: ./.github/workflows/ci_per_platform.yml
       with:
         target:   ${{ matrix.platform.target   }}
