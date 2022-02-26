@@ -55,12 +55,12 @@ jobs:
       CMD: ${{ matrix.platform.cmd }}
 
     if: (inputs.cross-platform || (
-             (contains(matrix.platform.target, "windows")      && input.windows)
-          || (contains(matrix.platform.target, "linux-gnu")    && input.linux)
-          || (contains(matrix.platform.target, "android")      && input.android)
-          || (contains(matrix.platform.target, "apple-darwin") && input.macos))
-          || (contains(matrix.platform.target, "apple-ios")    && input.ios))
-          || (contains(matrix.platform.target, "wasm32")       && input.wasm))
+             (contains(${{ matrix.platform.target }}, "windows")      && input.windows)
+          || (contains(${{ matrix.platform.target }}, "linux-gnu")    && input.linux)
+          || (contains(${{ matrix.platform.target }}, "android")      && input.android)
+          || (contains(${{ matrix.platform.target }}, "apple-darwin") && input.macos))
+          || (contains(${{ matrix.platform.target }}, "apple-ios")    && input.ios))
+          || (contains(${{ matrix.platform.target }}, "wasm32")       && input.wasm))
         ))
 
     runs-on: ${{ matrix.platform.os }}
