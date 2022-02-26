@@ -42,59 +42,59 @@ runs:
     CMD: ${{ inputs.cmd }}
 
   steps:
-  # Used to cache cargo-web
-  - name: Cache cargo folder
-    uses: actions/cache@v1
-    with:
-      path: ~/.cargo
-      key: ${{ inputs.target }}-cargo-${{ inputs.rust_version }}
+    # Used to cache cargo-web
+    - name: Cache cargo folder
+      uses: actions/cache@v1
+      with:
+        path: ~/.cargo
+        key: ${{ inputs.target }}-cargo-${{ inputs.rust_version }}
 
-  - uses: hecrj/setup-rust-action@v1
-    with:
-      rust-version: ${{ matrix.rust_version }}${{ inputs.host }}
-      targets: ${{ inputs.target }}
+    - uses: hecrj/setup-rust-action@v1
+      with:
+        rust-version: ${{ matrix.rust_version }}${{ inputs.host }}
+        targets: ${{ inputs.target }}
 
-  - name: Install GCC Multilib
-    if: (inputs.os == 'ubuntu-latest') && contains(inputs.target, 'i686')
-    run: sudo apt-get update && sudo apt-get install gcc-multilib
-  - name: Install cargo-apk
-    if: contains(inputs.target, 'android')
-    run: cargo install cargo-apk
+    - name: Install GCC Multilib
+      if: (inputs.os == 'ubuntu-latest') && contains(inputs.target, 'i686')
+      run: sudo apt-get update && sudo apt-get install gcc-multilib
+    - name: Install cargo-apk
+      if: contains(inputs.target, 'android')
+      run: cargo install cargo-apk
 
-  - name: Check documentation
-    shell: bash
-    if: inputs.target != 'wasm32-unknown-unknown'
-    run: cargo $CMD doc --no-deps --target ${{ inputs.target }} $OPTIONS --features $FEATURES
+    - name: Check documentation
+      shell: bash
+      if: inputs.target != 'wasm32-unknown-unknown'
+      run: cargo $CMD doc --no-deps --target ${{ inputs.target }} $OPTIONS --features $FEATURES
 
-  - name: Build
-    shell: bash
-    run: cargo $CMD build --verbose --target ${{ inputs.target }} $OPTIONS --features $FEATURES
+    - name: Build
+      shell: bash
+      run: cargo $CMD build --verbose --target ${{ inputs.target }} $OPTIONS --features $FEATURES
 
-  - name: Build tests
-    shell: bash
-    if: (steps.platform-check.outcome == 'success')
-    run: cargo $CMD test --no-run --verbose --target ${{ inputs.target }} $OPTIONS --features $FEATURES
-  - name: Run tests
-    shell: bash
-    if: (
-      (steps.platform-check.outcome == 'success') &&
-      !contains(inputs.target, 'android') &&
-      !contains(inputs.target, 'ios') &&
-      !contains(inputs.target, 'wasm32'))
-    run: cargo $CMD test --verbose --target ${{ inputs.target }} $OPTIONS --features $FEATURES
+    - name: Build tests
+      shell: bash
+      if: (steps.platform-check.outcome == 'success')
+      run: cargo $CMD test --no-run --verbose --target ${{ inputs.target }} $OPTIONS --features $FEATURES
+    - name: Run tests
+      shell: bash
+      if: (
+        (steps.platform-check.outcome == 'success') &&
+        !contains(inputs.target, 'android') &&
+        !contains(inputs.target, 'ios') &&
+        !contains(inputs.target, 'wasm32'))
+      run: cargo $CMD test --verbose --target ${{ inputs.target }} $OPTIONS --features $FEATURES
 
 
-  - name: Build with serde enabled
-    shell: bash
-    run: cargo $CMD build --verbose --target ${{ inputs.target }} $OPTIONS --features serde,$FEATURES
+    - name: Build with serde enabled
+      shell: bash
+      run: cargo $CMD build --verbose --target ${{ inputs.target }} $OPTIONS --features serde,$FEATURES
 
-  - name: Build tests with serde enabled
-    shell: bash
-    run: cargo $CMD test --no-run --verbose --target ${{ inputs.target }} $OPTIONS --features serde,$FEATURES
-  - name: Run tests with serde enabled
-    shell: bash
-    if: (
-      !contains(inputs.target, 'android') &&
-      !contains(inputs.target, 'ios') &&
-      !contains(inputs.target, 'wasm32'))
-    run: cargo $CMD test --verbose --target ${{ inputs.target }} $OPTIONS --features serde,$FEATURES
+    - name: Build tests with serde enabled
+      shell: bash
+      run: cargo $CMD test --no-run --verbose --target ${{ inputs.target }} $OPTIONS --features serde,$FEATURES
+    - name: Run tests with serde enabled
+      shell: bash
+      if: (
+        !contains(inputs.target, 'android') &&
+        !contains(inputs.target, 'ios') &&
+        !contains(inputs.target, 'wasm32'))
+      run: cargo $CMD test --verbose --target ${{ inputs.target }} $OPTIONS --features serde,$FEATURES
