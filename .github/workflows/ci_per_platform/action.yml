@@ -56,33 +56,33 @@ jobs:
 
     - name: Build
       shell: bash
-      run: cargo $CMD build --verbose --target ${{ matrix.platform.target }} $OPTIONS --features $FEATURES
+      run: cargo $CMD build --verbose --target ${{ inputs.target }} $OPTIONS --features $FEATURES
 
     - name: Build tests
       shell: bash
       if: (steps.platform-check.outcome == 'success')
-      run: cargo $CMD test --no-run --verbose --target ${{ matrix.platform.target }} $OPTIONS --features $FEATURES
+      run: cargo $CMD test --no-run --verbose --target ${{ inputs.target }} $OPTIONS --features $FEATURES
     - name: Run tests
       shell: bash
       if: (
         (steps.platform-check.outcome == 'success') &&
-        !contains(matrix.platform.target, 'android') &&
-        !contains(matrix.platform.target, 'ios') &&
-        !contains(matrix.platform.target, 'wasm32'))
-      run: cargo $CMD test --verbose --target ${{ matrix.platform.target }} $OPTIONS --features $FEATURES
+        !contains(inputs.target, 'android') &&
+        !contains(inputs.target, 'ios') &&
+        !contains(inputs.target, 'wasm32'))
+      run: cargo $CMD test --verbose --target ${{ inputs.target }} $OPTIONS --features $FEATURES
 
 
     - name: Build with serde enabled
       shell: bash
-      run: cargo $CMD build --verbose --target ${{ matrix.platform.target }} $OPTIONS --features serde,$FEATURES
+      run: cargo $CMD build --verbose --target ${{ inputs.target }} $OPTIONS --features serde,$FEATURES
 
     - name: Build tests with serde enabled
       shell: bash
-      run: cargo $CMD test --no-run --verbose --target ${{ matrix.platform.target }} $OPTIONS --features serde,$FEATURES
+      run: cargo $CMD test --no-run --verbose --target ${{ inputs.target }} $OPTIONS --features serde,$FEATURES
     - name: Run tests with serde enabled
       shell: bash
       if: (
-        !contains(matrix.platform.target, 'android') &&
-        !contains(matrix.platform.target, 'ios') &&
-        !contains(matrix.platform.target, 'wasm32'))
-      run: cargo $CMD test --verbose --target ${{ matrix.platform.target }} $OPTIONS --features serde,$FEATURES
+        !contains(inputs.target, 'android') &&
+        !contains(inputs.target, 'ios') &&
+        !contains(inputs.target, 'wasm32'))
+      run: cargo $CMD test --verbose --target ${{ inputs.target }} $OPTIONS --features serde,$FEATURES
