@@ -51,7 +51,7 @@ runs:
 
   - uses: hecrj/setup-rust-action@v1
     with:
-      rust-version: ${{ matrix.rust_version }}${{ inputs.host }}
+      rust-version: ${{ inputs.rust_version }}${{ inputs.host }}
       targets: ${{ inputs.target }}
 
   - name: Install GCC Multilib
