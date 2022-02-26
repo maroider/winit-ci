@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: tony84727/changed-file-filter@v0.1.0
+    - uses: dorny/paths-filter@v2.10.2
       id: filter
       with:
         filters: |
@@ -72,10 +72,10 @@ jobs:
     - name: Run tests
       uses: ./ci_per_platform.yml
       with:
-        windows: ${{ job.platform-check.outputs.windows }}
-        linux:   ${{ job.platform-check.outputs.linux   }}
-        macos:   ${{ job.platform-check.outputs.macos   }}
-        android: ${{ job.platform-check.outputs.android }}
-        ios:     ${{ job.platform-check.outputs.ios     }}
-        wasm:    ${{ job.platform-check.outputs.wasm    }}
+        windows: ${{ job.filter.outputs.windows }}
+        linux:   ${{ job.filter.outputs.linux   }}
+        macos:   ${{ job.filter.outputs.macos   }}
+        android: ${{ job.filter.outputs.android }}
+        ios:     ${{ job.filter.outputs.ios     }}
+        wasm:    ${{ job.filter.outputs.wasm    }}
 
