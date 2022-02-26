@@ -102,6 +102,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - name: Dummy
+       run: echo Dummy :D
 
   Run_Platform_Tests:
     needs: [Run_Tests]
