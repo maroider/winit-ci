@@ -34,27 +34,23 @@ jobs:
             - 'tests/*.rs'
             - '*.toml'
             - '.github/workflows/ci.yml'
-          run_return: &run_return
+          run_return:
             - 'src/platform/run_return.rs'
           windows:
-            - *run_return
             - 'src/platform/windows.rs'
             - 'src/platform_impl/windows/**'
             - 'src/platform/run_return.rs'
           linux:
-            - *run_return
             - 'src/platform/unix.rs'
             - 'src/platform_impl/linux/**'
             - 'src/platform/run_return.rs'
-          macos:
-            - *run_return
-            - 'src/platform/macos.rs'
-            - 'src/platform_impl/macos/**'
-            - 'src/platform/run_return.rs'
           android:
-            - *run_return
             - 'src/platform/android.rs'
             - 'src/platform_impl/android/**'
+            - 'src/platform/run_return.rs'
+          macos:
+            - 'src/platform/macos.rs'
+            - 'src/platform_impl/macos/**'
             - 'src/platform/run_return.rs'
           ios:
             - 'src/platform/ios.rs'
@@ -62,6 +58,14 @@ jobs:
           wasm:
             - 'src/platform/web.rs'
             - 'src/platform_impl/web/**'
+    outputs:
+      cross-platform: ${{ steps.filter.cross-platform }}
+      windows:        ${{ steps.filter.windows || steps.filter.run_return }}
+      linux:          ${{ steps.filter.linux   || steps.filter.run_return }}
+      android:        ${{ steps.filter.android || steps.filter.run_return }}
+      macos:          ${{ steps.filter.macos   || steps.filter.run_return }}
+      ios:            ${{ steps.filter.ios            }}
+      wasm:           ${{ steps.filter.wasm           }}
 
   Run_Tests:
     needs: [Tests]
