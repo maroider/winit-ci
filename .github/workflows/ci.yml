@@ -93,6 +93,7 @@ jobs:
           - { target: wasm32-unknown-unknown,   os: windows-latest }
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - name: Run platform tests
 #      if: ${{ (needs.Tests.outputs.cross-platform
 #                || ( (needs.Tests.outputs.windows && contains(matrix.platform.target, 'windows'))
