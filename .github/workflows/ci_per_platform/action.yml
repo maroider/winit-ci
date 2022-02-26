@@ -1,6 +1,9 @@
 on:
   workflow_call:
     inputs:
+      rust_version:
+        required: true
+        type: string
       target:
         required: true
         type: string
@@ -37,7 +40,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/.cargo
-        key: ${{ inputs.target }}-cargo-${{ matrix.rust_version }}
+        key: ${{ inputs.target }}-cargo-${{ inputs.rust_version }}
 
     - uses: hecrj/setup-rust-action@v1
       with:
