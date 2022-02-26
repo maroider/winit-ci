@@ -104,7 +104,7 @@ jobs:
 #                  || (needs.Tests.outputs.wasm    && contains(matrix.platform.target, 'wasm32'))
 #                )
 #           ) }}
-      uses: ./.github/workflows/ci_per_platform.yml
+      uses: ./.github/actions/ci_per_platform.yml
       with:
         target:   ${{ matrix.platform.target   }}
         os:       ${{ matrix.platform.os       }}
