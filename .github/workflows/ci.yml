@@ -68,14 +68,14 @@ jobs:
             - *cross-platform
             - 'src/platform/web.rs'
             - 'src/platform_impl/web/**'
-
-    - name: Run tests
-      uses: ./.github/workflows/ci_per_platform.yml
-      with:
-        windows: ${{ job.filter.outputs.windows }}
-        linux:   ${{ job.filter.outputs.linux   }}
-        macos:   ${{ job.filter.outputs.macos   }}
-        android: ${{ job.filter.outputs.android }}
-        ios:     ${{ job.filter.outputs.ios     }}
-        wasm:    ${{ job.filter.outputs.wasm    }}
+  Run_Tests:
+    needs: [Tests]
+    uses: ./.github/workflows/ci_per_platform.yml
+    with:
+      windows: ${{ job.filter.outputs.windows }}
+      linux:   ${{ job.filter.outputs.linux   }}
+      macos:   ${{ job.filter.outputs.macos   }}
+      android: ${{ job.filter.outputs.android }}
+      ios:     ${{ job.filter.outputs.ios     }}
+      wasm:    ${{ job.filter.outputs.wasm    }}
 
